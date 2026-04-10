@@ -13,7 +13,7 @@ var taskInfo = {
 	desc: "Code a modern todo / task card component with semantic html tags, screen reader accessible elements and time remaining indicator",
 	priority: "high",
 	status: "pending",
-	"due-date": new Date("2026-04-11T00:00:00"),
+	"due-date": new Date("2026-04-15T00:00:00"),
 	complete: false,
 };
 
@@ -47,6 +47,10 @@ checkbox.addEventListener("change", (event) => {
 	statusBadge.className = `status badge ${taskInfo.status == "in progress" ? "progress" : taskInfo.status.toLowerCase()}`;
 
 	checkRemaining();
+});
+
+title.addEventListener("click", () => {
+	checkbox.click();
 });
 
 statusBadge.addEventListener("click", () => {

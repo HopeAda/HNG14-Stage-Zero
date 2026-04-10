@@ -100,6 +100,7 @@ article.root-card {
 	flex-grow: 1;
 	font-size: 1.4rem;
 	color: var(--text-primary);
+	cursor: pointer;
 }
 
 .badge {
