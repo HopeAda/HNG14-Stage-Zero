@@ -10,24 +10,52 @@
 
 <body>
    <article class="root-card" data-testid="test-todo-card">
-      <section>
-         <input type="checkbox" name="check" id="check" class="check" data-testid="test-todo-complete-toggle">
+      <div class="heading">
+         <label for="check" class="not-visible">Mark task as complete</label>
+         <input type="checkbox" name="check" id="check" class="check" data-testid="test-todo-complete-toggle"
+            aria-label="Mark task as complete checkbox">
          <h2 class="title" data-testid="test-todo-title">Play a game</h2>
-         <span class="priority-badge" data-testid="test-todo-priority">High</span>
-      </section>
+         <span class="priority badge high" data-testid="test-todo-priority">High</span>
+      </div>
       <p class="desc" data-testid="test-todo-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.
          Architecto quos eaque quod porro voluptas provident veritatis et praesentium exercitationem laborum.</p>
-      <section>
-         <time datetime="" data-testid="test-todo-due-date">16th April, 2026</time>
-         <span class="time-remaining" data-testid="test-todo-time-remaining">Due in 3 days</span>
-      </section>
-      <div class="status" data-testid="test-todo-status"></div>
-      <ul role="list" class="tags" data-testid="test-todo-tags">
-         <li data-testid="test-todo-tag-work">work</li>
-         <li data-testid="test-todo-tag-urgent">urgent</li>
-      </ul>
-      <button class="edit" data-testid="test-todo-edit-button">Edit</button>
-      <button class="delete" data-testid="test-todo-delete-button">Delete</button>
+      <div class="due-info">
+         <span class="time">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+               <path
+                  d="M216 64C229.3 64 240 74.7 240 88L240 128L400 128L400 88C400 74.7 410.7 64 424 64C437.3 64 448 74.7 448 88L448 128L480 128C515.3 128 544 156.7 544 192L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 192C96 156.7 124.7 128 160 128L192 128L192 88C192 74.7 202.7 64 216 64zM216 176L160 176C151.2 176 144 183.2 144 192L144 240L496 240L496 192C496 183.2 488.8 176 480 176L216 176zM144 288L144 480C144 488.8 151.2 496 160 496L480 496C488.8 496 496 488.8 496 480L496 288L144 288z" />
+            </svg>
+            <time datetime="2026-04-16" data-testid="test-todo-due-date">16th April, 2026</time>
+         </span>
+         <span class="time_remaining">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+               <path
+                  d="M528 320C528 434.9 434.9 528 320 528C205.1 528 112 434.9 112 320C112 205.1 205.1 112 320 112C434.9 112 528 205.1 528 320zM64 320C64 461.4 178.6 576 320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320zM296 184L296 320C296 328 300 335.5 306.7 340L402.7 404C413.7 411.4 428.6 408.4 436 397.3C443.4 386.2 440.4 371.4 429.3 364L344 307.2L344 184C344 170.7 333.3 160 320 160C306.7 160 296 170.7 296 184z" />
+            </svg>
+            <span data-testid="test-todo-time-remaining">Due in 3 days</span></span>
+      </div>
+      <div class="badges">
+         <span class="status badge progress" data-testid="test-todo-status">In progress</span>
+         <ul role="list" class="tags" data-testid="test-todo-tags">
+            <li data-testid="test-todo-tag-work" class="badge">work</li>
+            <li data-testid="test-todo-tag-urgent" class="badge">urgent</li>
+            <li data-testid="test-todo-tag-design" class="badge">design</li>
+         </ul>
+      </div>
+      <div class="buttons">
+         <button class="edit" data-testid="test-todo-edit-button" aria-label="Edit button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+               <path
+                  d="M416.9 85.2L372 130.1L509.9 268L554.8 223.1C568.4 209.6 576 191.2 576 172C576 152.8 568.4 134.4 554.8 120.9L519.1 85.2C505.6 71.6 487.2 64 468 64C448.8 64 430.4 71.6 416.9 85.2zM338.1 164L122.9 379.1C112.2 389.8 104.4 403.2 100.3 417.8L64.9 545.6C62.6 553.9 64.9 562.9 71.1 569C77.3 575.1 86.2 577.5 94.5 575.2L222.3 539.7C236.9 535.6 250.2 527.9 261 517.1L476 301.9L338.1 164z" />
+            </svg>
+         </button>
+         <button class="delete" data-testid="test-todo-delete-button" aria-label="Delete button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+               <path
+                  d="M232.7 69.9L224 96L128 96C110.3 96 96 110.3 96 128C96 145.7 110.3 160 128 160L512 160C529.7 160 544 145.7 544 128C544 110.3 529.7 96 512 96L416 96L407.3 69.9C402.9 56.8 390.7 48 376.9 48L263.1 48C249.3 48 237.1 56.8 232.7 69.9zM512 208L128 208L149.1 531.1C150.7 556.4 171.7 576 197 576L443 576C468.3 576 489.3 556.4 490.9 531.1L512 208z" />
+            </svg>
+         </button>
+      </div>
 
 
    </article>
