@@ -132,7 +132,7 @@ article.root-card {
 
 p.desc {
 	margin-top: 0.5rem;
-	font-size: 1.1rem;
+	font-size: 1rem;
 	color: var(--text-secondary);
 	margin-bottom: 1rem;
 }
@@ -244,6 +244,10 @@ button:focus-visible {
 
 	.heading .title {
 		font-size: 1.4rem;
+	}
+
+	.desc {
+		font-size: 1.1rem;
 	}
 }
 
