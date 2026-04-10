@@ -8,45 +8,49 @@ const statusBadge = document.querySelector(".status");
 const editButton = document.querySelector(".edit");
 const deleteButton = document.querySelector(".delete");
 
-var taskInfo = {
+let taskInfo = {
 	title: "Complete Stage 0 Task",
 	desc: "Code a modern todo / task card component with semantic html tags, screen reader accessible elements and time remaining indicator",
 	priority: "high",
 	status: "pending",
-	"due-date": new Date("2026-04-15T00:00:00"),
+	"due-date": new Date(Date.now() + 300000), //5 minutes from current time
 	complete: false,
 };
 
-checkbox.checked = taskInfo.complete;
-title.textContent = taskInfo.title;
-description.textContent = taskInfo.desc;
-statusBadge.textContent = taskInfo.status;
-statusBadge.className = `status badge ${taskInfo.status == "in progress" ? "progress" : taskInfo.status.toLowerCase()}`;
-priorityBadge.textContent = taskInfo.priority;
-priorityBadge.className = `priority badge ${taskInfo.priority}`;
-timeCont.setAttribute("datetime", taskInfo["due-date"].toISOString());
-timeCont.textContent = taskInfo["due-date"].toLocaleDateString("en-US", {
-	day: "numeric",
-	year: "numeric",
-	month: "long",
-	hour: "2-digit",
-	minute: "2-digit",
-});
+function buildComponent() {
+	checkbox.checked = taskInfo.complete;
+	title.textContent = taskInfo.title;
+	description.textContent = taskInfo.desc;
+	statusBadge.textContent = taskInfo.status;
+	statusBadge.className = `status badge ${taskInfo.status == "in progress" ? "progress" : taskInfo.status.toLowerCase()}`;
+	priorityBadge.textContent = taskInfo.priority;
+	priorityBadge.className = `priority badge ${taskInfo.priority}`;
+	timeCont.setAttribute("datetime", taskInfo["due-date"].toISOString());
+	timeCont.textContent = taskInfo["due-date"].toLocaleDateString("en-US", {
+		day: "numeric",
+		year: "numeric",
+		month: "long",
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+}
+
+buildComponent();
 
 // Toggle checkbox
 checkbox.addEventListener("change", (event) => {
-	taskInfo.complete = !taskInfo.complete;
-	event.target.checked = taskInfo.complete;
+	taskInfo.complete = checkbox.checked;
 
-	if (event.target.checked) {
+	if (taskInfo.complete) {
 		taskInfo.status = "Done";
+		clearInterval(timer);
+		checkRemaining();
 	} else {
 		taskInfo.status = "in progress";
+		timer = setInterval(checkRemaining, 60000);
+		checkRemaining();
 	}
-	statusBadge.textContent = taskInfo.status;
-	statusBadge.className = `status badge ${taskInfo.status == "in progress" ? "progress" : taskInfo.status.toLowerCase()}`;
-
-	checkRemaining();
+	buildComponent();
 });
 
 title.addEventListener("click", () => {
@@ -54,72 +58,68 @@ title.addEventListener("click", () => {
 });
 
 statusBadge.addEventListener("click", () => {
-	if (statusBadge.textContent == "pending") {
+	if (taskInfo.status == "pending") {
 		taskInfo.status = "in progress";
-		statusBadge.textContent = taskInfo.status;
-		statusBadge.className = `status badge ${taskInfo.status == "in progress" ? "progress" : taskInfo.status.toLowerCase()}`;
+		buildComponent();
 	}
 });
+
+function updateTimerMsg(timeRemaining) {
+	let msg, amount, unit;
+	let units = ["day", "hour", "minute"];
+
+	for (let i = 0; i < timeRemaining.length - 1; i++) {
+		if (timeRemaining[i] != 0) {
+			amount = timeRemaining[i];
+			unit = units[i];
+			break;
+		}
+		amount = 0;
+	}
+
+	if (amount == 0) {
+		msg = "Due now!";
+	} else if (!timeRemaining[3]) {
+		msg = `Overdue by ${amount} ${unit}${amount == 1 ? "" : "s"}`;
+	} else {
+		msg =
+			amount == 1 && unit == "day"
+				? "Due Tomorrow"
+				: `Due in ${amount} ${unit}${amount == 1 ? "" : "s"}`;
+	}
+
+	if (!timeRemaining[3]) {
+		remainingTime.style.color =
+			amount == 0 ? "var(--text-secondary)" : "#d91b24";
+	} else {
+		remainingTime.style.color = "var(--text-secondary)";
+	}
+
+	remainingTime.textContent = msg;
+}
 
 function checkRemaining() {
 	if (taskInfo.complete) {
 		remainingTime.parentElement.style.display = "none";
+		return;
 	} else {
 		remainingTime.parentElement.style.display = "flex";
-
-		// Calculate remaining time
-		var differenceInMs = taskInfo["due-date"] - Date.now();
-
-		if (differenceInMs < 0) {
-			var daysremaining = Math.ceil(
-				differenceInMs / (1000 * 60 * 60 * 24),
-			);
-			var hoursRemaining = Math.ceil(differenceInMs / (1000 * 60 * 60));
-			var minutesRemaining = Math.ceil(differenceInMs / (1000 * 60));
-		} else {
-			var daysremaining = Math.floor(
-				differenceInMs / (1000 * 60 * 60 * 24),
-			);
-			var hoursRemaining = Math.floor(differenceInMs / (1000 * 60 * 60));
-			var minutesRemaining = Math.floor(differenceInMs / (1000 * 60));
-		}
-
-		var timeLeft = [daysremaining, hoursRemaining, minutesRemaining];
-
-		var dueDateMsg;
-
-		if (
-			Math.abs(daysremaining) == 0 &&
-			Math.abs(hoursRemaining) == 0 &&
-			Math.abs(minutesRemaining) == 0
-		) {
-			dueDateMsg = "Due now!";
-		} else {
-			for (var i = 0; i < timeLeft.length; i++) {
-				var units = ["day", "hour", "minute"];
-
-				if (timeLeft[i] !== 0) {
-					if (timeLeft[i] < 0) {
-						dueDateMsg = `Overdue by ${Math.abs(timeLeft[i])} ${units[i]}${Math.abs(timeLeft[i]) == 1 ? "" : "s"}`;
-						remainingTime.style.color = "#d91b24";
-					} else {
-						dueDateMsg = `Due in ${timeLeft[i]} ${units[i]}${Math.abs(timeLeft[i]) == 1 ? "" : "s"}`;
-						remainingTime.style.color = "var(--text-secondary)";
-					}
-					break;
-				}
-			}
-
-			if (dueDateMsg == "Due in 1 day") {
-				dueDateMsg = "Due tomorrow";
-			}
-		}
-
-		remainingTime.textContent = dueDateMsg;
 	}
-}
 
+	let diff = taskInfo["due-date"] - Date.now();
+	let timeDiff = Math.abs(diff);
+	let oneDay = 1000 * 24 * 60 * 60;
+	let days = Math.floor(timeDiff / oneDay);
+	let hours = Math.floor((timeDiff % oneDay) / (1000 * 60 * 60));
+	let minutes = Math.floor((timeDiff % (oneDay / 24)) / (1000 * 60));
+
+	let timeLeft = [days, hours, minutes, diff > 0];
+
+	updateTimerMsg(timeLeft);
+}
 checkRemaining();
+
+let timer = setInterval(checkRemaining, 60000);
 
 editButton.addEventListener("click", () => {
 	alert("Edit Button Clicked!");

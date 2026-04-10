@@ -50,6 +50,7 @@ body {
 	background-color: var(--bg-page);
 	padding: 1rem;
 	display: flex;
+	flex-direction: column;
 	padding-top: 3rem;
 	justify-content: center;
 }
